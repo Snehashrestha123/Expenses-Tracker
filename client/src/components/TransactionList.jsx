@@ -1,5 +1,5 @@
 import React from "react";
-import { Receipt, Search } from "lucide-react";
+import { Edit2, Receipt, Search, Trash2 } from "lucide-react";
 
 function TransactionList() {
     return (
@@ -56,9 +56,34 @@ function TransactionList() {
                             </span>
                         </div>
 
+                        <div className="flex items-center gap-2 text-xs">
+                            <span className="px-2.5 py-1 rounded-lg font-bold">
+                                Expense Category
+                            </span>
 
+                            <span className="text-gray-400">.</span>
+
+                            <span className="text-gray-500 font-medium">Date</span>
+
+                            {/* Conditional Rendering */}
+                            <>
+                                <span className="text-gray-400">.</span>
+                                <span className="text-gray-500">Expense Note</span>
+                            </>
+                        </div>
 
                     </div>
+
+                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                        <button className="p-2.5 bg-indigo-500 text-white hover:bg-indigo-600 rounded-xl transition-all shadow-sm">
+                            <Edit2 className="w-4 h-4" strokeWidth={2.5} />
+                        </button>
+
+                        <button className="p-2.5 bg-red-500 text-white hover:bg-red-600 rounded-xl transition-all shadow-sm">
+                            <Trash2 className="w-4 h-4" strokeWidth={2.5} />
+                        </button>
+                    </div>
+
                 </div>
             </div>
         </div>
