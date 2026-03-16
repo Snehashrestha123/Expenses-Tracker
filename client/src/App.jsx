@@ -77,22 +77,44 @@ function App() {
 
 
   //Edit and Delete Function
+  // const handleAddExpense = async (payload) => {
+  //   try {
+  //     const created = await createExpense(payload); // fixed typo
+
+  //     if (!created) throw new Error("No created expense returned");
+
+  //     setExpense((prev) => [
+  //       { ...created, date: created.date.split("T")[0] },
+  //       ...prev,
+  //     ]);
+
+  //     setIsModelOpen(false);
+  //   } catch (error) {
+  //     console.error("Create error:", error);
+  //   }
+  // };
+
+
   const handleAddExpense = async (payload) => {
-    try {
-      const created = await createExpense(payload); // fixed typo
-
-      if (!created) throw new Error("No created expense returned");
-
-      setExpense((prev) => [
-        { ...created, date: created.date.split("T")[0] },
-        ...prev,
-      ]);
-
-      setIsModelOpen(false);
-    } catch (error) {
-      console.error("Create error:", error);
+  try {
+    // Make sure payload has all fields
+    if (!payload.title || !payload.amount || !payload.category) {
+      console.error("Missing required fields");
+      return;
     }
-  };
+
+    const created = await createExpense(payload);
+
+    setExpense((prev) => [
+      { ...created, date: created.date.split("T")[0] },
+      ...prev,
+    ]);
+
+    setIsModelOpen(false);
+  } catch (error) {
+    console.error("Create error:", error);
+  }
+};
 
   const onEdit = (expense) => {
     setEditingExpense(expense);
@@ -146,7 +168,11 @@ function App() {
             <p className="text-gray-700">Manage your finances with ease</p>
           </div>
           <div className="flex items-center gap-3">
-            <button className="px-4 py-2 bg-gray-600 text-white rounded-xl font-semibold hover:shadow-2xl transition-all flex items-center gap-2">
+            <button className="px-4 py-2 bg-gray-600 text-white rounded-xl font-semibold hover:shadow-2xl transition-all flex items-center gap-2" onClick={() => {
+              setEditingExpense(null);
+              setIsModelOpen(true);
+            }}
+            >
               <Plus className="w-4 h-4 " /> Add Expenses
             </button>
           </div>
@@ -206,14 +232,40 @@ function App() {
         </div>
 
         {/*Transaction List*/}
-        <TransactionList />
+        <TransactionList
+          expenses={expenses}
+          onDelete={handleDelete}
+          onEdit={onEdit}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          filterCategory={filterCategory}
+          setFilterCategory={setFilterCategory}
+          isLoading={isLoading}
+        />
       </div>
 
       {/*Model */}
 
-      {/* <Model /> */}
+      <Model
+        isOpen={isModelOpen}
+        onClose={() => {
+          setIsModelOpen(false);
+          setEditingExpense(null);
+        }}
+        // setIsModelOpen={setIsModelOpen}
+        onSubmit={editingExpense ? handleSaveEdit : handleAddExpense}
+        initialData={editingExpense}
+      />
     </div>
   );
 }
 
 export default App;
+
+
+
+
+
+
+
+

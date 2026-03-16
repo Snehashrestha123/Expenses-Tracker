@@ -1,7 +1,19 @@
 import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
-function CategoryChart() {
+const COLORS = ["#6366F1", "#8B5CF6", "#EC4899", "#F59E0B", "#10B981"];
+
+function CategoryChart({ categoyTotal }) {
+
+    const data =
+        Object.entries(categoyTotal || {}).map(
+            ([name, value], index) => ({
+                name,
+                value,
+                color: COLORS[index % COLORS.length],
+            })
+        );
+
     return (
         <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
 
@@ -11,7 +23,7 @@ function CategoryChart() {
                 <PieChart>
 
                     <Pie
-                        data={""}
+                        data={data}
                         cx="50%"
                         cy="50%"
                         innerRadius={60}
@@ -19,9 +31,9 @@ function CategoryChart() {
                         paddingAngle={3}
                         dataKey="value"
                     >
-                        {/* {"".map((entry, index) => (
+                        {data.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))} */}
+                        ))}
                     </Pie>
 
                     <Tooltip formatter={(value) => `$${value.toFixed(2)}`} />
@@ -29,11 +41,14 @@ function CategoryChart() {
                 </PieChart>
             </ResponsiveContainer>
             <div className="grid grid-cols-2 gap-3mt-6">
-                <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded"></div>
-                    <span className="text-xs font-semibold text-gray-700">Items Name</span>
-                </div>
-
+                {data.map((item) => {
+                    return (
+                        <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 rounded style={{backgroundColor:item.color"></div>
+                            <span className="text-xs font-semibold text-gray-700">{item.name}</span>
+                        </div>
+                    )
+                })}
             </div>
 
         </div>
